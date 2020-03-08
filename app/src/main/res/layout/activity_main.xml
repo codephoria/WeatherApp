@@ -12,65 +12,147 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/birds" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="#CCffffff"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weatherLayout">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#99ffffff"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="5dp"
+            android:text="City"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/cityNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:ems="10"
+            android:gravity="right"
+            android:hint="Enter city name"
+            android:inputType="textPersonName"
+            android:singleLine="false"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccentLight"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="@id/textView"
+            app:layout_constraintTop_toBottomOf="@id/textView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tomorrowButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:padding="18dp"
+            android:text="Tomorrow"
+            android:textSize="18sp"
+            app:cornerRadius="0dp"
+            app:layout_constraintEnd_toEndOf="@id/cityNameEditText"
+            app:layout_constraintTop_toBottomOf="@id/cityNameEditText"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1.5dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/todayButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:onClick="getWeather"
+            android:padding="18dp"
+            android:text="Now"
+            android:textSize="18sp"
+            app:cornerRadius="0dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tomorrowButton"
+            app:layout_constraintEnd_toStartOf="@id/tomorrowButton"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1.5dp" />
+
+        <Switch
+            android:id="@+id/celsiusFahrenheitSwitch"
+            style="@style/MySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:elegantTextHeight="true"
+            android:onClick="switchCelsiusFahrenheit"
+            android:showText="true"
+            android:text="Celsius/Fahrenheit: "
+            android:textOff="C"
+            android:textOn="F"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/tomorrowButton"
+            app:layout_constraintTop_toBottomOf="@id/tomorrowButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/weatherLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:padding="5dp"
-        android:text="City"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="right"
-        android:hint="Enter city name"
-        android:inputType="textPersonName"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/cityNameWeatherView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="London" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/tomorrowButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="18dp"
-        android:text="Tomorrow"
-        android:textSize="18sp"
-        app:cornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1.5dp" />
+        <TextView
+            android:id="@+id/degrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#99ffffff"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cityNameWeatherView"
+            tools:text="26°C" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/todayButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:padding="18dp"
-        android:text="Now"
-        android:textSize="18sp"
-        app:cornerRadius="0dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tomorrowButton"
-        app:layout_constraintEnd_toStartOf="@+id/tomorrowButton"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1.5dp" />
+        <TextView
+            android:id="@+id/weatherDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:background="#CCffffff"
+            android:gravity="end"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/degrees"
+            tools:text="Drizzling rain" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
