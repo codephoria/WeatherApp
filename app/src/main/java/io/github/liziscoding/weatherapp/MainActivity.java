@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public void getWeather(View view){
         enteredCity = cityNameEditText.getText().toString();
         if (enteredCity.length() > 0){
-            cityNameWeatherView.setText(enteredCity);
+            cityNameWeatherView.setText(enteredCity.toUpperCase());
             String searchUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + enteredCity + "&APPID=" + apiKey;
             GetWeatherData getWeatherData = new GetWeatherData(this);
             getWeatherData.execute(searchUrl);
@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
             currentTempInFahrenheit = (int) (Double.parseDouble(parsedTemperatureString) * 9/5 - 459.67);
             currentTempInCelsius =  (int) (Double.parseDouble(parsedTemperatureString) - 273.15);
             if (tempInFahrenheit){
-                degreesTextView.setText(Integer.toString(currentTempInFahrenheit));
+                degreesTextView.setText(Integer.toString(currentTempInFahrenheit)+"°F");
             } else {
-                degreesTextView.setText(Integer.toString(currentTempInCelsius));
+                degreesTextView.setText(Integer.toString(currentTempInCelsius)+"°C");
             }
             weatherDescriptionTextView.setText(parsedDescription);
             temperatureShown = true;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             degreesTextView.setText("");
             weatherDescriptionTextView.setText("There was a problem. Try again.");
             if (possibleErrors == 1){
-                weatherDescriptionTextView.setText("There was a problem. Try again.\nThe city may not be in our database.");
+                weatherDescriptionTextView.setText("There was a problem. Try again.\nIt seems we couldn't find your city.");
             }
             temperatureShown = false;
         }
@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         if (on){
             tempInFahrenheit = true;
             if (temperatureShown){
-                degreesTextView.setText(Integer.toString(currentTempInFahrenheit));
+                degreesTextView.setText(Integer.toString(currentTempInFahrenheit)+"°F");
             }
         } else {
             tempInFahrenheit = false;
             if (temperatureShown){
-                degreesTextView.setText(Integer.toString(currentTempInCelsius));
+                degreesTextView.setText(Integer.toString(currentTempInCelsius)+"°C");
             }
         }
     }
