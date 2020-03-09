@@ -9,11 +9,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class GetWeatherData extends AsyncTask<String, Void, String> {
+public class GetForecastData extends AsyncTask<String, Void, String> {
     private static final String TAG = "GetWeatherData";
     private final MainActivity mCallback;
 
-    public GetWeatherData(MainActivity callback) {
+    public GetForecastData(MainActivity callback) {
         mCallback = callback;
     }
 
@@ -31,7 +31,7 @@ public class GetWeatherData extends AsyncTask<String, Void, String> {
             InputStreamReader reader = new InputStreamReader(in);
             int data = reader.read();
 
-            while (data != -1){
+            while (data != -1) {
                 char current = (char) data;
                 result += current;
                 data = reader.read();
@@ -39,11 +39,11 @@ public class GetWeatherData extends AsyncTask<String, Void, String> {
             reader.close();
             return result;
 
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             Log.e(TAG, "================Something wrong in GetWeatherData================");
             e.printStackTrace();
             mCallback.setPossibleErrors(1);
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "================Something wrong in GetWeatherData================");
             e.printStackTrace();
         }
@@ -53,7 +53,8 @@ public class GetWeatherData extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        ParseWeatherData parseWeatherData = new ParseWeatherData(mCallback);
-        parseWeatherData.execute(s);
+        ParseForecastData parseForecastData = new ParseForecastData(mCallback);
+        parseForecastData.execute(s);
     }
 }
+

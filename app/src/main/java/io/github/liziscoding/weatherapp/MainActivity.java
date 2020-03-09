@@ -3,11 +3,14 @@ package io.github.liziscoding.weatherapp;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -24,18 +27,23 @@ public class MainActivity extends AppCompatActivity {
     int currentTempInFahrenheit = 0;
     boolean temperatureShown = false;
     int possibleErrors = 0; // 1 = filenotfound
+    LinearLayout forecastLayout;
+    TextView forecastCityTextView;
+    RecyclerView forecastCardsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().setBackgroundDrawableResource(R.drawable.birds);
         weatherLayout = findViewById(R.id.weatherLayout);
         cityNameEditText = findViewById(R.id.cityNameEditText);
         cityNameWeatherView = findViewById(R.id.cityNameWeatherView);
         degreesTextView = findViewById(R.id.degrees);
         weatherDescriptionTextView = findViewById(R.id.weatherDescription);
-
+        forecastLayout = findViewById(R.id.forecastLayout);
+        forecastCityTextView = findViewById(R.id.forecastCityTextView);
+        forecastCardsRecyclerView = findViewById(R.id.forecastCardView);
     }
 
     public void getWeather(View view){
@@ -47,7 +55,18 @@ public class MainActivity extends AppCompatActivity {
             getWeatherData.execute(searchUrl);
         }
 
+        forecastLayout.setVisibility(View.INVISIBLE);
         weatherLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void getForecast(View view){
+        enteredCity = cityNameEditText.getText().toString();
+        if (enteredCity.length() > 0){
+            forecastCityTextView.setText(enteredCity.toUpperCase());
+            String searchUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + enteredCity + "&APPID=" + apiKey;
+            GetForecastData getForecastData = new GetForecastData(this);
+            getForecastData.execute(searchUrl);
+        }
     }
 
     public void setWeather(ArrayList<String> parsedWeatherData){
@@ -72,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
             temperatureShown = false;
         }
-        cityNameEditText.setText("");
+        //cityNameEditText.setText("");
     }
 
     public void switchCelsiusFahrenheit(View view){
@@ -93,5 +112,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPossibleErrors(int errorCode){
         possibleErrors = errorCode;
+    }
+
+    public void setCards(ArrayList<ArrayList<String>> cardDataAll){
+        ArrayList<String> cardDate = cardDataAll.get(0);
+        ArrayList<String> cardTime = cardDataAll.get(1);
+        ArrayList<String> cardTemp = cardDataAll.get(2);
+        ArrayList<String> cardDescription = cardDataAll.get(3);
+
+        ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
+        forecastCardsRecyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        layoutManager.setStackFromEnd(true);
+        forecastCardsRecyclerView.setLayoutManager(layoutManager);
+
+        weatherLayout.setVisibility(View.INVISIBLE);
+        forecastLayout.setVisibility(View.VISIBLE);
     }
 }
