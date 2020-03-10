@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> cardTempCelsius;
     ArrayList<String> cardTempFahrenheit;
     boolean modeIsWeatherForecast = false;
+    ConstraintLayout infoLayout;
+    TextView infoText;
 
 
     ArrayList<String> cardDate;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         forecastLayout = findViewById(R.id.forecastLayout);
         forecastCityTextView = findViewById(R.id.forecastCityTextView);
         forecastCardsRecyclerView = findViewById(R.id.forecastCardView);
+        infoLayout = findViewById(R.id.infoLayout);
+        infoText = findViewById(R.id.infoText);
     }
 
     public void getWeather(View view){
@@ -71,9 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
         forecastLayout.setVisibility(View.INVISIBLE);
         weatherLayout.setVisibility(View.VISIBLE);
+        infoLayout.setVisibility(View.INVISIBLE);
     }
 
     public void getForecast(View view){
+        infoText.setText("Loading...");
+        forecastLayout.setVisibility(View.INVISIBLE);
+        weatherLayout.setVisibility(View.INVISIBLE);
+        infoLayout.setVisibility(View.VISIBLE);
         modeIsWeatherForecast = true;
         enteredCity = cityNameEditText.getText().toString();
         if (enteredCity.length() > 0){
@@ -162,8 +171,22 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 cardTemp = cardTempCelsius;
             }
+            ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
+            forecastCardsRecyclerView.setAdapter(adapter);
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+            //layoutManager.setStackFromEnd(true);
+            forecastCardsRecyclerView.setLayoutManager(layoutManager);
+
+            weatherLayout.setVisibility(View.INVISIBLE);
+            infoLayout.setVisibility(View.INVISIBLE);
+            forecastLayout.setVisibility(View.VISIBLE);
 
         } else {
+            infoText.setText("There was a problem. Please try again.\nIt seems we couldn't find your city.");
+            forecastLayout.setVisibility(View.INVISIBLE);
+            weatherLayout.setVisibility(View.INVISIBLE);
+            infoLayout.setVisibility(View.VISIBLE);
             cardDate = new ArrayList<>();
             cardTime = new ArrayList<>();
             cardTemp = new ArrayList<>();
@@ -174,15 +197,6 @@ public class MainActivity extends AppCompatActivity {
             cardDescription.add("");
         }
 
-            ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
-            forecastCardsRecyclerView.setAdapter(adapter);
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-            //layoutManager.setStackFromEnd(true);
-            forecastCardsRecyclerView.setLayoutManager(layoutManager);
-
-            weatherLayout.setVisibility(View.INVISIBLE);
-            forecastLayout.setVisibility(View.VISIBLE);
 
         }
 
