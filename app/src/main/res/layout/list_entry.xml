@@ -9,7 +9,7 @@
     android:layout_gravity="end"
     android:layout_margin="5dp"
     android:layout_weight="1"
-    android:backgroundTint="#99ffffff"
+    android:backgroundTint="#ccffffff"
     android:orientation="vertical"
     app:cardCornerRadius="0dp">
 
@@ -24,6 +24,7 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:padding="5dp"
             android:paddingStart="20dp"

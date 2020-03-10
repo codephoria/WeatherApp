@@ -1,6 +1,10 @@
 package io.github.liziscoding.weatherapp;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -14,28 +18,108 @@ public class ParseForecastData  extends AsyncTask<String, Void, ArrayList<ArrayL
 
     @Override
     protected ArrayList<ArrayList<String>> doInBackground(String... jsonString) {
+        ArrayList<String> temperatures = new ArrayList<>();
+        ArrayList<String> weatherDescriptions = new ArrayList<>();
+        ArrayList<String> date = new ArrayList<>();
+        ArrayList<String> parsedTime = new ArrayList<>();
+        ArrayList<ArrayList<String>> parsedResult = new ArrayList<ArrayList<String>>();
 
-            ArrayList<String> testdate = new ArrayList<>();
-            testdate.add("JAN 1");
-            testdate.add("JAN 2");
-        ArrayList<String> testtime = new ArrayList<>();
-        testtime.add("8pm");
-        testtime.add("10pm");
-            ArrayList<String> testtemp = new ArrayList<>();
-            testtemp.add("4");
-            testtemp.add("80");
-            ArrayList<String> testdescr = new ArrayList<>();
-            testdescr.add("Rain");
-            testdescr.add("Sunny");
+        Log.d(TAG, "doInBackground: " + jsonString[0]);
+
+        try {
+            JSONArray rawWeatherDataArray = new JSONObject(jsonString[0]).getJSONArray("list");
+            for (int i = 0; i < rawWeatherDataArray.length(); i++) {
+                JSONObject oneForecastItem = rawWeatherDataArray.getJSONObject(i);
+                String temperature = oneForecastItem.getJSONObject("main").getString("temp");
+                temperatures.add(temperature);
+                String weatherDescription = oneForecastItem.getJSONArray("weather").getJSONObject(0).getString("main");
+                weatherDescriptions.add(weatherDescription);
+                String dateTime = oneForecastItem.getString("dt_txt");
+                String[] splitDateTime = dateTime.split(" ");  // ["2020-03-10","21:00:00"]
+                String[] separatedDate = splitDateTime[0].split("-"); // ["2020","03","10"]
+                String month = separatedDate[1];
+                switch (month){
+                    case "01":
+                        month = "JAN";
+                        break;
+                    case "02":
+                        month = "FEB";
+                        break;
+                    case "03":
+                        month = "MAR";
+                        break;
+                    case "04":
+                        month = "APR";
+                        break;
+                    case "05":
+                        month = "MAY";
+                        break;
+                    case "06":
+                        month = "JUN";
+                        break;
+                    case "07":
+                        month = "JUL";
+                        break;
+                    case "08":
+                        month = "AUG";
+                        break;
+                    case "09":
+                        month = "SEP";
+                        break;
+                    case "10":
+                        month = "OCT";
+                        break;
+                    case "11":
+                        month = "NOV";
+                        break;
+                    case "12":
+                        month = "DEC";
+                        break;
+                }
+
+                String day = separatedDate[2];
+
+                if (Character.toString(day.charAt(0)).equalsIgnoreCase("0")){
+                    day = day.substring(1);
+                }
+                date.add(month + " " + day);
 
 
-            ArrayList<ArrayList<String>> result = new ArrayList<>();
-            result.add(testdate);
-            result.add(testtime);
-            result.add(testtemp);
-            result.add(testdescr);
+                String[] splitTimes = splitDateTime[1].split(":"); // ["21","00","00"]
+                String ampm = "AM";
+                String newTime = "";
+                int timeAsNumber = Integer.parseInt(splitTimes[0]);
+                if (timeAsNumber == 0){
+                    newTime = "12";
+                    ampm = "AM";
+                } else if (timeAsNumber < 12){
+                    newTime = String.valueOf(timeAsNumber);
+                    ampm = "AM";
+                } else {
+                    if (timeAsNumber != 12){
+                        newTime = String.valueOf(timeAsNumber-12);
 
-        return result;
+                    } else {
+                        newTime = String.valueOf(timeAsNumber);
+                    }
+                    ampm = "PM";
+
+                }
+                parsedTime.add(newTime + ampm);
+            }
+
+            parsedResult.add(date);
+            parsedResult.add(parsedTime);
+            parsedResult.add(temperatures);
+            parsedResult.add(weatherDescriptions);
+            return parsedResult;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
     @Override

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
     ConstraintLayout weatherLayout;
     EditText cityNameEditText;
     TextView cityNameWeatherView;
@@ -30,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout forecastLayout;
     TextView forecastCityTextView;
     RecyclerView forecastCardsRecyclerView;
+    ArrayList<String> cardTempCelsius;
+    ArrayList<String> cardTempFahrenheit;
+    boolean modeIsWeatherForecast = false;
+
+
+    ArrayList<String> cardDate;
+    ArrayList<String> cardTime;
+    ArrayList<String> cardTempKelvin;
+    ArrayList<String> cardDescription;
+    ArrayList<String> cardTemp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getWeather(View view){
+        modeIsWeatherForecast = false;
         enteredCity = cityNameEditText.getText().toString();
         if (enteredCity.length() > 0){
             cityNameWeatherView.setText(enteredCity.toUpperCase());
@@ -60,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getForecast(View view){
+        modeIsWeatherForecast = true;
         enteredCity = cityNameEditText.getText().toString();
         if (enteredCity.length() > 0){
             forecastCityTextView.setText(enteredCity.toUpperCase());
@@ -99,13 +114,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (on){
             tempInFahrenheit = true;
-            if (temperatureShown){
-                degreesTextView.setText(Integer.toString(currentTempInFahrenheit)+"°F");
+            if (modeIsWeatherForecast == false){
+                if (temperatureShown){
+                    degreesTextView.setText(Integer.toString(currentTempInFahrenheit)+"°F");
+                }
+            } else {
+                switchCardView();
             }
+
         } else {
             tempInFahrenheit = false;
-            if (temperatureShown){
-                degreesTextView.setText(Integer.toString(currentTempInCelsius)+"°C");
+            if (modeIsWeatherForecast == false){
+                if (temperatureShown){
+                    degreesTextView.setText(Integer.toString(currentTempInCelsius)+"°C");
+                }
+            } else {
+                switchCardView();
             }
         }
     }
@@ -115,19 +139,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCards(ArrayList<ArrayList<String>> cardDataAll){
-        ArrayList<String> cardDate = cardDataAll.get(0);
-        ArrayList<String> cardTime = cardDataAll.get(1);
-        ArrayList<String> cardTemp = cardDataAll.get(2);
-        ArrayList<String> cardDescription = cardDataAll.get(3);
 
-        ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
-        forecastCardsRecyclerView.setAdapter(adapter);
+        if (cardDataAll != null) {
+            cardDate = cardDataAll.get(0);
+            cardTime = cardDataAll.get(1);
+            cardTempKelvin = cardDataAll.get(2);
+            cardDescription = cardDataAll.get(3);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        layoutManager.setStackFromEnd(true);
-        forecastCardsRecyclerView.setLayoutManager(layoutManager);
+            cardTempCelsius = new ArrayList<>();
+            cardTempFahrenheit = new ArrayList<>();
+            for (String degrees : cardTempKelvin) {
+                int celsius = (int) (Double.parseDouble(degrees) - 273.15);
+                cardTempCelsius.add(Integer.toString(celsius));
+            }
+            for (String degrees : cardTempKelvin) {
+                int fahrenheit = (int) (Double.parseDouble(degrees) * 9/5 - 459.67);
+                cardTempFahrenheit.add(Integer.toString(fahrenheit));
+            }
 
-        weatherLayout.setVisibility(View.INVISIBLE);
-        forecastLayout.setVisibility(View.VISIBLE);
-    }
+            if (tempInFahrenheit){
+                cardTemp = cardTempFahrenheit;
+            } else {
+                cardTemp = cardTempCelsius;
+            }
+
+        } else {
+            cardDate = new ArrayList<>();
+            cardTime = new ArrayList<>();
+            cardTemp = new ArrayList<>();
+            cardDescription = new ArrayList<>();
+            cardDate.add("");
+            cardTime.add("");
+            cardTemp.add("Uh-oh!");
+            cardDescription.add("Something went wrong.");
+        }
+
+            ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
+            forecastCardsRecyclerView.setAdapter(adapter);
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+            //layoutManager.setStackFromEnd(true);
+            forecastCardsRecyclerView.setLayoutManager(layoutManager);
+
+            weatherLayout.setVisibility(View.INVISIBLE);
+            forecastLayout.setVisibility(View.VISIBLE);
+
+        }
+
+        public void switchCardView(){
+
+        if (!cardTemp.get(0).equalsIgnoreCase("Uh-oh!")){
+            if (tempInFahrenheit){
+                cardTemp = cardTempFahrenheit;
+            } else {
+                cardTemp = cardTempCelsius;
+            }
+        }
+
+            ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
+            forecastCardsRecyclerView.setAdapter(adapter);
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+            //layoutManager.setStackFromEnd(true);
+            forecastCardsRecyclerView.setLayoutManager(layoutManager);
+
+        }
 }
