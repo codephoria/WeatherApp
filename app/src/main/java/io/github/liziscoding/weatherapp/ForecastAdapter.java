@@ -54,7 +54,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         TextView timeTextView = (TextView) cardView.findViewById(R.id.time);
         timeTextView.setText(time.get(position));
         TextView forecastDegrees = (TextView) cardView.findViewById(R.id.forecastDegrees);
-        forecastDegrees.setText(temperature.get(position)+"°");
+        if (temperature.get(position).equalsIgnoreCase("Uh-oh!")) {
+            forecastDegrees.setText(temperature.get(position));
+        } else {
+            forecastDegrees.setText(temperature.get(position)+"°");
+        }
         TextView forecastText = (TextView) cardView.findViewById(R.id.forecastText);
         forecastText.setText(description.get(position));
     }

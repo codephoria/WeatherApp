@@ -168,10 +168,10 @@ public class MainActivity extends AppCompatActivity {
             cardTime = new ArrayList<>();
             cardTemp = new ArrayList<>();
             cardDescription = new ArrayList<>();
-            cardDate.add("");
-            cardTime.add("");
+            cardDate.add("There was a problem. Please try again. ");
+            cardTime.add("It seems we couldn't find your city.");
             cardTemp.add("Uh-oh!");
-            cardDescription.add("Something went wrong.");
+            cardDescription.add("");
         }
 
             ForecastAdapter adapter = new ForecastAdapter(cardDate, cardTime, cardTemp, cardDescription);
