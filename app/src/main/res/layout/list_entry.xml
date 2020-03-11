@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:padding="5dp"
             android:paddingStart="20dp"
+            android:paddingTop="5dp"
             android:paddingEnd="20dp"
             android:text="Jan 1, 6pm" />
 
@@ -36,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="5dp"
             tools:text="9pm" />
 
         <TextView
@@ -44,18 +43,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="5dp"
             android:text="8°"
-            android:textSize="36sp" />
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/forecastText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="5dp"
             android:text="Rain"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

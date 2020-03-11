@@ -1,7 +1,6 @@
 package io.github.liziscoding.weatherapp;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +23,6 @@ public class ParseForecastData  extends AsyncTask<String, Void, ArrayList<ArrayL
         ArrayList<String> parsedTime = new ArrayList<>();
         ArrayList<ArrayList<String>> parsedResult = new ArrayList<ArrayList<String>>();
 
-        Log.d(TAG, "doInBackground: " + jsonString[0]);
 
         try {
             JSONArray rawWeatherDataArray = new JSONObject(jsonString[0]).getJSONArray("list");

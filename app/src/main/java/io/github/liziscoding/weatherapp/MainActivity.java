@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             weatherDescriptionTextView.setText("There was a problem. Try again.");
             if (possibleErrors == 1){
                 weatherDescriptionTextView.setText("There was a problem. Try again.\nIt seems we couldn't find your city.");
+                possibleErrors = 0;
             }
             temperatureShown = false;
         }
@@ -183,7 +184,11 @@ public class MainActivity extends AppCompatActivity {
             forecastLayout.setVisibility(View.VISIBLE);
 
         } else {
-            infoText.setText("There was a problem. Please try again.\nIt seems we couldn't find your city.");
+            infoText.setText("There was a problem. Please try again.");
+            if (possibleErrors == 1){
+                infoText.setText("There was a problem. Please try again.\nIt seems we couldn't find your city.");
+                possibleErrors = 0;
+            }
             forecastLayout.setVisibility(View.INVISIBLE);
             weatherLayout.setVisibility(View.INVISIBLE);
             infoLayout.setVisibility(View.VISIBLE);
