@@ -1,7 +1,9 @@
 package io.github.liziscoding.weatherapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> cardDescription;
     ArrayList<String> cardTemp;
 
+    InputMethodManager mgr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
         if (enteredCity.length() > 0){
             cityNameWeatherView.setText(enteredCity.toUpperCase());
             String searchUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + enteredCity + "&APPID=" + apiKey;
+
+            mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
+
             GetWeatherData getWeatherData = new GetWeatherData(this);
             getWeatherData.execute(searchUrl);
         }
@@ -88,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         if (enteredCity.length() > 0){
             forecastCityTextView.setText(enteredCity.toUpperCase());
             String searchUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + enteredCity + "&APPID=" + apiKey;
+            mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
             GetForecastData getForecastData = new GetForecastData(this);
             getForecastData.execute(searchUrl);
         }
