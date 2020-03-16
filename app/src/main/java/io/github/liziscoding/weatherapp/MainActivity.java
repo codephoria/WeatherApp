@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,21 +70,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void getWeather(View view){
         modeIsWeatherForecast = false;
-        enteredCity = cityNameEditText.getText().toString();
-        if (enteredCity.length() > 0){
-            cityNameWeatherView.setText(enteredCity.toUpperCase());
-            String searchUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + enteredCity + "&APPID=" + apiKey;
+        try {
+            enteredCity = cityNameEditText.getText().toString();
+            if (enteredCity.length() > 0){
+                cityNameWeatherView.setText(enteredCity.toUpperCase());
+                String encodedCityName = URLEncoder.encode(enteredCity, "UTF-8");
+                String searchUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + encodedCityName + "&APPID=" + apiKey;
 
-            mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
+                mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
 
-            GetWeatherData getWeatherData = new GetWeatherData(this);
-            getWeatherData.execute(searchUrl);
+                GetWeatherData getWeatherData = new GetWeatherData(this);
+                getWeatherData.execute(searchUrl);
+            }
+
+            forecastLayout.setVisibility(View.INVISIBLE);
+            weatherLayout.setVisibility(View.VISIBLE);
+            infoLayout.setVisibility(View.INVISIBLE);
+        } catch (Exception e){
+            e.printStackTrace();
+            infoText.setText("There was a problem. Please try again.");
+            forecastLayout.setVisibility(View.INVISIBLE);
+            weatherLayout.setVisibility(View.INVISIBLE);
+            infoLayout.setVisibility(View.VISIBLE);
         }
 
-        forecastLayout.setVisibility(View.INVISIBLE);
-        weatherLayout.setVisibility(View.VISIBLE);
-        infoLayout.setVisibility(View.INVISIBLE);
     }
 
     public void getForecast(View view){
@@ -93,14 +104,24 @@ public class MainActivity extends AppCompatActivity {
         infoLayout.setVisibility(View.VISIBLE);
         modeIsWeatherForecast = true;
         enteredCity = cityNameEditText.getText().toString();
-        if (enteredCity.length() > 0){
-            forecastCityTextView.setText(enteredCity.toUpperCase());
-            String searchUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + enteredCity + "&APPID=" + apiKey;
-            mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
-            GetForecastData getForecastData = new GetForecastData(this);
-            getForecastData.execute(searchUrl);
+        try {
+            if (enteredCity.length() > 0){
+                forecastCityTextView.setText(enteredCity.toUpperCase());
+                String encodedCityName = URLEncoder.encode(enteredCity, "UTF-8");
+                String searchUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + encodedCityName + "&APPID=" + apiKey;
+                mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(cityNameEditText.getWindowToken(), 0);
+                GetForecastData getForecastData = new GetForecastData(this);
+                getForecastData.execute(searchUrl);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            infoText.setText("There was a problem. Please try again.");
+            forecastLayout.setVisibility(View.INVISIBLE);
+            weatherLayout.setVisibility(View.INVISIBLE);
+            infoLayout.setVisibility(View.VISIBLE);
         }
+
     }
 
     public void setWeather(ArrayList<String> parsedWeatherData){
